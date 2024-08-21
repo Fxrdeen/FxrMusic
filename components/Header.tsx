@@ -6,6 +6,9 @@ import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import { HiHome } from "react-icons/hi";
 import { BiSearch } from "react-icons/bi";
 import Button from "./Button";
+import useAuthModal from "@/hooks/useAuthModal";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useUser } from "@/hooks/useUser";
 const Header = ({
   children,
   className,
@@ -14,7 +17,16 @@ const Header = ({
   className?: string;
 }) => {
   const router = useRouter();
-  const handleLogOut = () => {};
+  const { onOpen } = useAuthModal();
+  const supabaseClient = useSupabaseClient();
+  const { user } = useUser();
+  const handleLogOut = async () => {
+    const { error } = await supabaseClient.auth.signOut();
+    router.refresh();
+    if (error) {
+      console.log(error);
+    }
+  };
   return (
     <div
       className={twMerge(
@@ -48,12 +60,17 @@ const Header = ({
         <div className="flex justify-between items-center gap-x-4">
           <>
             <div>
-              <Button className="bg-transparent text-neutral-300 font-md">
+              <Button
+                onClick={onOpen}
+                className="bg-transparent text-neutral-300 font-md"
+              >
                 Sign up
               </Button>
             </div>
             <div>
-              <Button className="bg-white px-6 py-2">Log In</Button>
+              <Button onClick={onOpen} className="bg-white px-6 py-2">
+                Log In
+              </Button>
             </div>
           </>
         </div>
