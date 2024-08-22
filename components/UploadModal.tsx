@@ -10,6 +10,7 @@ import uniqid from "uniqid";
 
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
+
 const UploadModal = () => {
   const [isLoading, setisLoading] = useState(false);
   const uploadModal = useUploadModal();
@@ -74,7 +75,7 @@ const UploadModal = () => {
         });
       if (supabaseError) {
         setisLoading(false);
-        console.log("Supabase error came");
+        console.log("Supabase error came", supabaseError);
         return;
       }
       router.refresh();
